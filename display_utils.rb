@@ -12,7 +12,6 @@ module DisplayUtils
       Player Types:
       A. Human
       B. Computer (Random)
-      C. Computer (AI)
 
     TEXT
   end
