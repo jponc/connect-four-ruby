@@ -1,8 +1,8 @@
 module Model
   class Player
-    attr_reader :number,
-                :name,
-                :strategy
+    attr_reader :number
+    attr_reader :name
+    attr_reader :strategy
 
     def initialize(options)
       @number = options[:number]
