@@ -31,6 +31,10 @@ module DisplayUtils
     end
   end
 
+  def print_end
+    puts 'Thanks for playing!'
+  end
+
   def clear_screen
     # NOTE: Works for both unix and windows systems
     #

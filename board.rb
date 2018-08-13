@@ -1,9 +1,9 @@
+require_relative 'state_checker'
+
 class Board
   attr_reader :state,
               :rows_count,
               :columns_count
-
-  CELL_WIDTH = 4
 
   def initialize(state)
     @state = state
@@ -15,7 +15,7 @@ class Board
     row = next_available_row(column)
     state[row][column] = identifier
 
-    false
+    get_result(row, column)
   end
 
   def valid_columns
@@ -30,11 +30,28 @@ class Board
       headers[1].push('-')
     end
 
-    puts headers.map { |a| a.map { |i| i.to_s.rjust(CELL_WIDTH) }.join }
-    puts state.map { |a| a.map { |i| i.to_s.rjust(CELL_WIDTH) }.join }
+    cell_width = 4
+
+    puts headers.map { |a| a.map { |i| i.to_s.rjust(cell_width) }.join }
+    puts state.map { |a| a.map { |i| i.to_s.rjust(cell_width) }.join }
+    puts
   end
 
   private
+
+  def get_result(row, column)
+    if win?(row, column)
+      :win
+    elsif valid_columns.empty?
+      :draw
+    else
+      :continue
+    end
+  end
+
+  def win?(row, column)
+    StateChecker.new(state: state, row: row, column: column).win?
+  end
 
   def valid_column?(column)
     state[0][column].nil?

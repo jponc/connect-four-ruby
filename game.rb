@@ -14,21 +14,37 @@ class Game
   end
 
   def start(current_player)
+    result = :continue
+
     loop do
       clear_screen
       print_board_state
       print_current_player_move(current_player)
 
       column = current_player.select(board)
-      done = board.pick(column, current_player.number)
+      result = board.pick(column, current_player.number)
 
-      break if done
+      break if result != :continue
 
       current_player = get_next_player(current_player)
     end
+
+    clear_screen
+    print_board_state
+    output_result(current_player, result)
+    print_end
   end
 
   private
+
+  def output_result(player, result)
+    case result
+    when :draw
+      puts 'Game is a DRAW'
+    when :win
+      puts "Player ##{player.number} won this game!"
+    end
+  end
 
   def get_next_player(current_player)
     current_index = players.find_index(current_player)
