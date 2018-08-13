@@ -6,8 +6,6 @@ class StateChecker
               :columns_count,
               :value
 
-  FOUR = 4
-
   def initialize(options)
     @state = options[:state]
 
@@ -24,58 +22,62 @@ class StateChecker
   end
 
   def vertical?
-    # NOTE: Just need to get the last 3 rows
-    #
-    last_row = row + (FOUR - 1)
-
-    return false if last_row >= rows_count
-
-    cell_values =
-      (row..last_row).to_a.map do |r|
-        state[r][column]
-      end
-
-    cell_values.all?(value)
+    hits = directional_check(:lower)
+    hits >= 3
   end
 
   def horizontal?
-    # NOTE: This solution checks on the succeeding right
-    # values then left values
-    #
-    hit_count = 1
-
-    # Right
-    #
-    counter = 0
-    loop do
-      counter += 1
-      column_check = column + counter
-      break if state[row][column_check] != value
-
-      hit_count += 1
-      return true if hit_count == FOUR
-    end
-
-    # Left
-    #
-    counter = 0
-    loop do
-      counter += 1
-      column_check = column - counter
-
-      different_value = state[row][column_check] != value
-      below_zero = column_check < 0
-
-      break if below_zero || different_value
-
-      hit_count += 1
-      return true if hit_count == FOUR
-    end
-
-    false
+    hits = directional_check(:right) + directional_check(:left)
+    hits >= 3
   end
 
   def diagonal?
-    false
+    hits = directional_check(:upper_right) + directional_check(:lower_left)
+    return true if hits >= 3
+
+    hits = directional_check(:upper_left) + directional_check(:lower_right)
+    hits >= 3
+  end
+
+  def directional_check(direction)
+    hit_count = 0
+    counter = 1
+    column_check = column
+    row_check = row
+
+    loop do
+      case direction
+      when :lower
+        row_check += 1
+      when :right
+        column_check += 1
+      when :left
+        column_check -= 1
+      when :upper_right
+        column_check += 1
+        row_check -= 1
+      when :upper_left
+        column_check -= 1
+        row_check -= 1
+      when :lower_right
+        column_check += 1
+        row_check += 1
+      when :lower_left
+        column_check -= 1
+        row_check += 1
+      end
+
+      row_below_zero = row_check < 0
+      column_below_zero = column_check < 0
+      row_above_count = row_check >= rows_count
+      column_above_count = column_check >= columns_count
+
+      break if column_below_zero || row_below_zero || row_above_count || column_above_count
+      break if state[row_check][column_check] != value
+
+      hit_count += 1
+    end
+
+    hit_count
   end
 end
