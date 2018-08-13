@@ -3,6 +3,7 @@ require_relative '../strategy/random'
 require_relative '../strategy/minimax'
 
 require_relative '../player'
+require_relative '../board'
 require_relative '../display_utils'
 
 module GameOptions
@@ -28,19 +29,20 @@ module GameOptions
 
       board = generate_board(rows, columns)
       players = generate_players(players_count)
-      current_player = players.first
 
       game = new(
         board: board,
-        players: players,
-        current_player: current_player,
+        players: players
       )
 
-      game.start
+      # NOTE: Start the game using the first player
+      #
+      game.start(players.first)
     end
 
     def generate_board(rows, columns)
-      Array.new(rows) { Array.new(columns) }
+      state = Array.new(rows) { Array.new(columns) }
+      Board.new(state)
     end
 
     def generate_players(players_count)
