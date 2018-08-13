@@ -6,6 +6,8 @@ class StateChecker
               :columns_count,
               :value
 
+  FOUR = 4
+
   def initialize(options)
     @state = options[:state]
 
@@ -22,7 +24,9 @@ class StateChecker
   end
 
   def vertical?
-    last_row = row + 3
+    # NOTE: Just need to get the last 3 rows
+    #
+    last_row = row + (FOUR - 1)
 
     return false if last_row >= rows_count
 
@@ -35,6 +39,39 @@ class StateChecker
   end
 
   def horizontal?
+    # NOTE: This solution checks on the succeeding right
+    # values then left values
+    #
+    hit_count = 1
+
+    # Right
+    #
+    counter = 0
+    loop do
+      counter += 1
+      column_check = column + counter
+      break if state[row][column_check] != value
+
+      hit_count += 1
+      return true if hit_count == FOUR
+    end
+
+    # Left
+    #
+    counter = 0
+    loop do
+      counter += 1
+      column_check = column - counter
+
+      different_value = state[row][column_check] != value
+      below_zero = column_check < 0
+
+      break if below_zero || different_value
+
+      hit_count += 1
+      return true if hit_count == FOUR
+    end
+
     false
   end
 
