@@ -2,6 +2,7 @@ module Model
   class Game
     attr_reader :board
     attr_reader :players
+    attr_reader :current_index
 
     def initialize(options)
       @board = options[:board]
