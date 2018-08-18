@@ -9,5 +9,10 @@
 ## Usage
 
 ```sh
+$ cd connect-four-ruby
+$ bundle install
 $ ./start.rb
 ```
+## Improvements
+
+1. Implement minimax algorithm for computer player
