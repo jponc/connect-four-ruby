@@ -20,8 +20,6 @@ module Service
       end
     end
 
-    private
-
     def win?
       vertical? || horizontal? || diagonal?
     end
@@ -29,6 +27,8 @@ module Service
     def draw?
       board.valid_columns.empty?
     end
+
+    private
 
     def vertical?
       hits = directional_check(:lower)
